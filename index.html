@@ -1,0 +1,51 @@
+<section style="max-width:520px;margin:40px auto;padding:20px;border:1px solid #ddd;border-radius:12px;">
+  <h2>Форма обратной связи</h2>
+
+  <form id="contactForm" action="https://formspree.io/f/XXXXXXXX" method="POST">
+    <label style="display:block;margin-top:12px;">Имя</label>
+    <input name="name" required minlength="2" placeholder="Иван"
+           style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;">
+
+    <label style="display:block;margin-top:12px;">Email</label>
+    <input type="email" name="email" required placeholder="ivan@mail.com"
+           style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;">
+
+    <label style="display:block;margin-top:12px;">Сообщение</label>
+    <textarea name="message" required minlength="10" rows="5" placeholder="Ваше сообщение..."
+              style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;"></textarea>
+
+    <button type="submit"
+            style="margin-top:14px;padding:10px 14px;border:none;border-radius:8px;cursor:pointer;">
+      Отправить
+    </button>
+
+    <p id="status" style="margin-top:12px;"></p>
+  </form>
+</section>
+
+<script>
+  const form = document.getElementById("contactForm");
+  const statusEl = document.getElementById("status");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusEl.textContent = "Отправка...";
+
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { "Accept": "application/json" }
+      });
+
+      if (res.ok) {
+        form.reset();
+        statusEl.textContent = "✅ Сообщение отправлено!";
+      } else {
+        statusEl.textContent = "❌ Ошибка отправки. Проверь форму/сервис.";
+      }
+    } catch {
+      statusEl.textContent = "❌ Нет соединения или неверный адрес сервиса.";
+    }
+  });
+</script>
